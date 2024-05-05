@@ -19,6 +19,7 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadingCat, setLoadingCat] = useState(false);
 
   //get all cat
   const getAllCategory = async () => {
@@ -97,17 +98,21 @@ const HomePage = () => {
   //get filterd product
   const filterProduct = async () => {
     try {
+      setLoadingCat(true);
       const { data } = await axios.post("/api/v1/product/product-filters", {
         checked,
         radio,
       });
       setProducts(data?.products);
+      setLoadingCat(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoadingCat(false); // Set loading state to false after the call is finished
     }
   };
   return (
-    <Layout title={"ALl Products - Best offers "}>
+    <Layout title={"ALL Products - Best offers "}>
       {/* banner image */}
       <img
         src="/images/banner.png"
@@ -150,73 +155,83 @@ const HomePage = () => {
           </div>
         </div>
         <div className="col-md-9 ">
-          <h1 className="text-center">All Products</h1>
-          <div className="d-flex flex-wrap">
-            {products?.map((p) => (
-              <div className="card m-2" key={p._id}>
-                <img
-                  src={`/api/v1/product/product-photo/${p._id}`}
-                  className="card-img-top"
-                  alt={p.name}
-                />
-                <div className="card-body">
-                  <div className="card-name-price">
-                    <h5 className="card-title">{p.name}</h5>
-                    <h5 className="card-title card-price">
-                      {p.price.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })}
-                    </h5>
-                  </div>
-                  <p className="card-text ">
-                    {p.description.substring(0, 60)}...
-                  </p>
-                  <div className="card-name-price">
-                    <button
-                      className="btn btn-info ms-1"
-                      onClick={() => navigate(`/product/${p.slug}`)}
-                    >
-                      More Details
-                    </button>
-                    <button
-                      className="btn btn-dark ms-1"
-                      onClick={() => {
-                        setCart([...cart, p]);
-                        localStorage.setItem(
-                          "cart",
-                          JSON.stringify([...cart, p])
-                        );
-                        toast.success("Item Added to cart");
-                      }}
-                    >
-                      ADD TO CART
-                    </button>
+          <h1 className="text-center-1">All Products</h1>
+          {loadingCat ? (
+            <div className="loading-text">Loading ...</div>
+          ) : (
+            <div className="d-flex flex-wrap">
+              {products?.map((p) => (
+                <div className="card m-2" key={p._id}>
+                  <img
+                    src={`/api/v1/product/product-photo/${p._id}`}
+                    className="card-img-top"
+                    alt={p.name}
+                  />
+                  <div className="card-body">
+                    <div className="card-name-price">
+                      <h5 className="card-title">
+                        {p.name.substring(0, 13)}...
+                      </h5>
+                      <h5 className="card-title card-price">
+                        {p.price.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </h5>
+                    </div>
+                    <p className="card-text ">
+                      {p.description.substring(0, 50)}...
+                    </p>
+                    <div className="card-name-price">
+                      <button
+                        className="btn btn-info ms-1"
+                        onClick={() => navigate(`/product/${p.slug}`)}
+                      >
+                        More Details
+                      </button>
+                      <button
+                        className="btn btn-dark ms-1"
+                        onClick={() => {
+                          setCart([...cart, p]);
+                          localStorage.setItem(
+                            "cart",
+                            JSON.stringify([...cart, p])
+                          );
+                          toast.success("Item Added to cart");
+                        }}
+                      >
+                        ADD TO CART
+                      </button>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+          {!loadingCat && // Only render the button if the filter data is not loading
+            products &&
+            products.length < total &&
+            !checked.length &&
+            !radio.length && (
+              <div className="m-2 p-3">
+                <button
+                  className="btn loadmore"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage(page + 1);
+                  }}
+                >
+                  {loading ? (
+                    "Loading ..."
+                  ) : (
+                    <>
+                      {" "}
+                      Loadmore <AiOutlineReload />
+                    </>
+                  )}
+                </button>
               </div>
-            ))}
-          </div>
-          <div className="m-2 p-3">
-            {products && products.length < total && (
-              <button
-                className="btn loadmore"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage(page + 1);
-                }}
-              >
-                {loading ? (
-                  "Loading ..."
-                ) : (
-                  <>
-                    {" "}
-                    Loadmore <AiOutlineReload />
-                  </>
-                )}
-              </button>
             )}
-          </div>
         </div>
       </div>
     </Layout>

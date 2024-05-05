@@ -8,29 +8,37 @@ const CategoryProduct = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (params?.slug) getPrductsByCat();
   }, [params?.slug]);
   const getPrductsByCat = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get(
         `/api/v1/product/product-category/${params.slug}`
       );
       setProducts(data?.products);
       setCategory(data?.category);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <Layout>
+      {loading ? (
+        <div className="loader-container">
+            <div className="spinner"></div>
+        </div>
+      ) : (
       <div className="container mt-3 category">
+        
         <h4 className="text-center">Category - {category?.name}</h4>
         <h6 className="text-center">{products?.length} result found </h6>
         <div className="row">
-          <div className="col-md-9 offset-1">
+          <div className="col-md-100 offset-1">
             <div className="d-flex flex-wrap">
               {products?.map((p) => (
                 <div className="card m-2" key={p._id}>
@@ -41,7 +49,7 @@ const CategoryProduct = () => {
                   />
                   <div className="card-body">
                     <div className="card-name-price">
-                      <h5 className="card-title">{p.name}</h5>
+                      <h5 className="card-title">{p.name.substring(0, 15)}</h5>
                       <h5 className="card-title card-price">
                         {p.price.toLocaleString("en-US", {
                           style: "currency",
@@ -50,7 +58,7 @@ const CategoryProduct = () => {
                       </h5>
                     </div>
                     <p className="card-text ">
-                      {p.description.substring(0, 60)}...
+                      {p.description.substring(0, 75)}...
                     </p>
                     <div className="card-name-price">
                       <button
@@ -93,6 +101,7 @@ const CategoryProduct = () => {
           </div>
         </div>
       </div>
+      )}
     </Layout>
   );
 };

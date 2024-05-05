@@ -6,7 +6,7 @@ const Contact = () => {
     <Layout title={"Contact us"}>
       <div className="row contactus ">
         <div className="col-md-6 ">
-          <img
+          <img className="contact-1"
             src="/images/contactus.jpeg"
             alt="contactus"
             style={{ width: "100%" }}

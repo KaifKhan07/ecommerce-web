@@ -6,14 +6,14 @@ const About = () => {
     <Layout title={"About us - Ecommer app"}>
       <div className="row contactus ">
         <div className="col-md-6 ">
-          <img
+          <img className="about-1"
             src="/images/about.jpeg"
             alt="contactus"
             style={{ width: "100%" }}
           />
         </div>
         <div className="col-md-4">
-          <p className="text-justify mt-2">
+          <p className="text-justify-1 mt-2">
           Welcome to Nexus Cartify, where shopping meets convenience and quality. At Nexus Cartify, we're dedicated to providing you with an unparalleled online shopping experience.
 
 Our mission is simple: to connect you with a wide array of products that enrich your life, all in one convenient location. Whether you're searching for the latest fashion trends, cutting-edge gadgets, or everyday essentials, Nexus Cartify has you covered.

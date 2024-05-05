@@ -6,14 +6,14 @@ const Policy = () => {
     <Layout title={"Privacy Policy"}>
       <div className="row contactus ">
         <div className="col-md-6 ">
-          <img
+          <img className="policy"
             src="/images/contactus.jpeg"
             alt="contactus"
             style={{ width: "100%" }}
           />
         </div>
         <div className="col-md-4">
-          <p><b>Privacy Policy</b>
+          <p className="policy-1"><b>Privacy Policy</b>
 
 At Nexus Cartify, we take your privacy seriously. This Privacy Policy outlines how we collect, use, disclose, and protect your personal information when you use our website www.nexuscartify.com and any related services (collectively referred to as the "Service").
 
